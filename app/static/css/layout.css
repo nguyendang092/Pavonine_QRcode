@@ -4,6 +4,7 @@ body, html {
     background: #fff; 
     justify-content: center;
     align-items: center;
+    background-size: cover;
 }
 h2 {
     text-align: center;
@@ -37,4 +38,11 @@ nav a {
     width: 100%;
     display: block;
     object-fit: cover;
+    background-size: cover;
+}
+@media (min-width: 1200px) {
+    .slides img {
+        height: auto;
+        width: 100%;
+    }
 }
