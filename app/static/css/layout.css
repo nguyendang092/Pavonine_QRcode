@@ -4,7 +4,13 @@ body, html {
     background: #fff; 
     justify-content: center;
     align-items: center;
+    background-position: center;
     background-size: cover;
+    background-repeat: no-repeat;
+}
+main{
+    justify-content: center;
+    align-items: center;
 }
 h2 {
     text-align: center;
