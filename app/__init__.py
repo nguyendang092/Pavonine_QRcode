@@ -1,7 +1,5 @@
 from flask import Flask
-from .routes import main_blueprint
+from .main import main as main_blueprint
 
-def create_app():
-    app = Flask(__name__)
-    app.register_blueprint(main_blueprint, url_prefix='/')
-    return app
+app = Flask(__name__)
+app.register_blueprint(main_blueprint, url_prefix='/main')
