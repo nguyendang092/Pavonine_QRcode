@@ -1,7 +1,6 @@
-from flask import Blueprint, render_template
+from flask import render_template
 from . import main
 
-main = Blueprint('main', __name__)
 
 @main.route('/')
 def index():
