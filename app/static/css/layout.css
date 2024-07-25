@@ -20,21 +20,21 @@ nav a {
     text-decoration: none;
 }
 .slider {
-    width: 100vw;
-    height: 90wh;
+    width: auto;
+    height: auto;
     overflow: hidden;
     position: relative;
 }
 
 .slides {
     display: flex;
-    width: 100%;
+    width: auto;
     transition: transform 1s ease;
 }
 
 .slides img {
     flex-shrink: 0;
-    width: 100vw;
+    width: 100%;
     display: block;
     object-fit: cover;
 }
