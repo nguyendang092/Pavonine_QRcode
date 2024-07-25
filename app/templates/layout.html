@@ -4,12 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Hello! Say Hi!{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+    <script src="{{ url_for('static', filename='js/scripts.js') }}" defer></script>
 </head>
 <body>
     <header>
-        <h1>Nguyễn Minh Thư ! I love you!</h1>
         <nav>
             <a href="{{ url_for('main.index') }}">Home</a>
             <a href="{{ url_for('main.about') }}">About</a>
@@ -17,7 +16,17 @@
     </header>
     <main>
         {% block content %}{% endblock %}
+        <div class="slider">
+            <div class="slides">
+                <img src="{{ url_for('static', filename='image/z5665669315774_8602bacc3992df6077fa5fbcbc5e481f.jpg') }}" alt="Image 1">
+                <img src="{{ url_for('static', filename='image/z5665669315684_5b60f6eafaf42bf07163fd6b2bd673f8.jpg') }}" alt="Image 2">
+                <img src="{{ url_for('static', filename='image/z5665669315683_9e9cb5d3759a743501728dbd33f9d1eb.jpg') }}" alt="Image 3">
+                <img src="{{ url_for('static', filename='image/z5665669301362_09928b255ec7109eecf40ebdb21c2a90.jpg') }}" alt="Image 4">
+                <img src="{{ url_for('static', filename='image/z5665669301146_61178c37be114f8534f8a41704e4c7b4.jpg') }}" alt="Image 5">
+            </div>
+        </div>
     </main>
+    
     <footer>
         <p>&copy; 2024 My Flask App</p>
     </footer>
