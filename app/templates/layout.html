@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}My Flask App{% endblock %}</title>
+    <title>{% block title %}Hello! Say Hi!{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
 </head>
 <body>
     <header>
-        <h1>My Flask App</h1>
+        <h1>Nguyễn Minh Thư ! I love you!</h1>
         <nav>
             <a href="{{ url_for('main.index') }}">Home</a>
             <a href="{{ url_for('main.about') }}">About</a>
