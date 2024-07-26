@@ -3,10 +3,15 @@ from . import main
 import datetime
 import qrcode
 from io import BytesIO
+import pytz
+
 
 @main.route('/')
 def index():
-    login_time = datetime.datetime.now().strftime(f"%Y-%m-%d - %H:%M:%S")
+    vietnam_zone = pytz.timezone('Asia/Ho_Chi_Minh')
+    utc_time = datetime.datetime.now(pytz.utc)
+    vietnam_time = utc_time.astimezone(vietnam_zone)
+    login_time = vietnam_time.strftime("%Y-%m-%d - %H:%M:%S")
     return render_template('index.html', login_time=login_time)
 
 @main.route('/about')
