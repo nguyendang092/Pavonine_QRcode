@@ -64,8 +64,12 @@ window.addEventListener("load", () => {
       document.getElementById("date-time").innerHTML = dateTime;
       setTimeout(clock, 1000);
     }
-    clock();
-    
+    clock();   
 });
-const loginTime = document.getElementById('login-time').textContent;
-window.alert("Chào mừng! Thời gian đăng nhập của bạn là: " + loginTime);
+window.addEventListener("load",() => {
+    const loginTimeStr  = document.getElementById("login-time").textContent
+    const loginTime = new Date(loginTimeStr)
+    const qrCreationTimeStr = "{{ qr_creation_time }}";
+    console.log(qrCreationTimeStr)
+    console.log(loginTime);
+})
