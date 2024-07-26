@@ -1,10 +1,9 @@
-from flask import Flask, render_template, session, send_file
+from flask import Flask, render_template, session, send_file,request
 from datetime import datetime, timezone, timedelta
 import pytz
 import qrcode
 from io import BytesIO
 from . import main
-
 
 @main.route('/')
 def index():
@@ -17,7 +16,7 @@ def about():
 
 
 def generate_qr(url, timestamp):
-    qr_content = f"{url},{timestamp}"
+    qr_content = f"{url}?data={timestamp}"
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
@@ -33,7 +32,7 @@ def generate_qr(url, timestamp):
 def generate_qr_download():
     timestamp = datetime.now(pytz.timezone('Asia/Ho_Chi_Minh'))
     formatted_timestamp = timestamp.strftime("%Y-%m-%d_%H_%M_%S")
-    url = "https://myprojectflask-f4e65bcb2a22.herokuapp.com/main/"
+    url = "http://127.0.0.1:5000/main"
     image = generate_qr(url, formatted_timestamp)
     session['creation_qr'] = formatted_timestamp
     buffer = BytesIO()
@@ -43,18 +42,14 @@ def generate_qr_download():
     return send_file(buffer, mimetype='image/png', as_attachment=True, download_name=file_name)
 
 @main.route('/scan_qr')
+@main.route('/scan_qr')
 def scan_qr():
-    creation_time_str = session.get('creation_time')
-    if not creation_time_str:
-        return render_template('index.html')
-    
-    creation_time = datetime.fromisoformat(creation_time_str)
-    current_time = datetime.now(timezone.utc)
-    time_diff = current_time - creation_time
-
-    if time_diff > timedelta(hours=12):
-        message = "Thành công! Thời gian quét lớn hơn 12 giờ so với thời gian tạo mã."
+    data = request.args.get('data')
+    if data:
+        # Ví dụ: chuyển đổi dữ liệu thành thời gian hoặc URL
+        qr_creation_time = data  # hoặc parse data nếu cần
+        message = f"Thời gian tạo mã QR là: {qr_creation_time}"
     else:
-        message = "Thất bại! Thời gian quét chưa đủ 12 giờ so với thời gian tạo mã."
+        message = "Không có dữ liệu trong URL."
 
-    return render_template('index.html', message=message)
+    return render_template('scan_qr.html', message=message)

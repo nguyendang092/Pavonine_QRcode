@@ -65,11 +65,19 @@ window.addEventListener("load", () => {
       setTimeout(clock, 1000);
     }
     clock();   
+    const urlParams = new URLSearchParams(window.location.search);
+    console.log(urlParams)
 });
-window.addEventListener("load",() => {
-    const loginTimeStr  = document.getElementById("login-time").textContent
-    const loginTime = new Date(loginTimeStr)
-    const qrCreationTimeStr = "{{ qr_creation_time }}";
-    console.log(qrCreationTimeStr)
-    console.log(loginTime);
-})
+window.addEventListener('load', () => {
+    // Lấy tham số từ URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const data = urlParams.get('data');
+    console.log(data)
+
+    // Hiển thị dữ liệu trên trang
+    if (data) {
+        document.getElementById('message').innerText = `Thời gian tạo mã QR là: ${data}`;
+    } else {
+        document.getElementById('message').innerText = 'Không có dữ liệu trong URL.';
+    }
+});

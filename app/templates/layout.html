@@ -9,16 +9,17 @@
 </head>
 <body>
     <header>
-        <nav class="container">
-            <a href="{{ url_for('main.index') }}">Home</a>
-            <a href="{{ url_for('main.about') }}">About</a>
-            <a href="/main/generate_qr_download">Tạo mã QR</a>
-            <p>Thời gian đăng nhập: <span id="login-time">{{ login_time }}</span></p>
-            <h2 class="welcome">WELCOME TO PAVONINE</h2>
-            <div class="clock">
-                <h2 id="date-time"></h1>
-            </div>
-        </nav>   
+            <nav class="container">
+                <a href="{{ url_for('main.index') }}">Home</a>
+                <a href="{{ url_for('main.about') }}">About</a>
+                <a href="/main/generate_qr_download">Tạo mã QR</a>
+                <p><span id="login-time">{{ login_time }}</span></p>
+                <h2 class="welcome">WELCOME TO PAVONINE</h2>
+                <div class="clock">
+                    <h2 id="date-time"></h1>
+                       <p id="message">{{message}}</p> 
+                </div>
+            </nav>   
     </header>
     <main>
         {% block content %}{% endblock %}
