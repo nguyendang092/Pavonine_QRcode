@@ -9,19 +9,23 @@
 </head>
 <body>
     <header>
-        <nav>
+        <nav class="container">
             <a href="{{ url_for('main.index') }}">Home</a>
             <a href="{{ url_for('main.about') }}">About</a>
+            <div class="clock">
+                <h2 id="date-time"></h1>
+            </div>
         </nav>
+        
     </header>
     <main>
         {% block content %}{% endblock %}
         <div class="slider">
             <div class="slides">
-                <img src="{{ url_for('static', filename='image/total.jpg') }}" alt="Image 1">
+                <img src="{{ url_for('static', filename='image/Total.jpg') }}" alt="Image 1">
                 <img src="{{ url_for('static', filename='image/Press.jpg') }}" alt="Image 2">
                 <img src="{{ url_for('static', filename='image/MC.jpg') }}" alt="Image 3">
-                <img src="{{ url_for('static', filename='image/Hl.jpg') }}" alt="Image 4">
+                <img src="{{ url_for('static', filename='image/HL.jpg') }}" alt="Image 4">
                 <img src="{{ url_for('static', filename='image/MC_NG.jpg') }}" alt="Image 5">
             </div>
         </div>
