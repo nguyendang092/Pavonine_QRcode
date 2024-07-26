@@ -10,7 +10,6 @@ function nextSlide() {
 setInterval(nextSlide, 15000);
 
 window.addEventListener("load", () => {
-    clock();
     function clock() {
       const today = new Date();
   
@@ -65,4 +64,8 @@ window.addEventListener("load", () => {
       document.getElementById("date-time").innerHTML = dateTime;
       setTimeout(clock, 1000);
     }
-  });
+    clock();
+    
+});
+const loginTime = document.getElementById('login-time').textContent;
+window.alert("Chào mừng! Thời gian đăng nhập của bạn là: " + loginTime);
