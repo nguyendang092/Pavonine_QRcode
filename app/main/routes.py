@@ -30,7 +30,7 @@ def generate_qr(url, timestamp):
     qr.make(fit=True)
     img = qr.make_image(fill_color="black", back_color="white").convert('RGB')
     draw = ImageDraw.Draw(img)
-    font = ImageFont.load_default(16)
+    font = ImageFont.load_default()
     text = f'Pavonine_QRcode_{timestamp}' 
     text_bbox = draw.textbbox((0, 0), text, font=font)
     text_width = text_bbox[2] - text_bbox[0]
