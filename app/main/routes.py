@@ -53,7 +53,7 @@ def generate_qr_download():
     image.save(buffer, format="PNG")
     buffer.seek(0)
     session['qr_image'] = buffer.getvalue()
-    return redirect(url_for('qr_info'))
+    return redirect(url_for('main.qr_info'))
 
 @main.route('/qr_info')
 def qr_info():
