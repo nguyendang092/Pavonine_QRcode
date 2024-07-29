@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+
+{% block title %}QR Code Information{% endblock %}
+
+{% block content %}
+    <h1>QR Code Information</h1>
+    <div class="qr-code">
+        <p id="creation-time">Creation Time: {{ creation_time}}</p>
+        <img src="data:image/png;base64,{{ qr_image }}" alt="QR Code">
+</div>
+{% endblock %}
+

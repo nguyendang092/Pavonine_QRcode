@@ -8,6 +8,9 @@ body, html {
     background-repeat: no-repeat;
     height: 100vh;
 }
+h1,p{
+    text-align: center;
+}
 h2 {
     text-transform: uppercase;
 }
@@ -21,7 +24,12 @@ header {
 }
 .container{
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
+    align-items: center;
+}
+.qr-code {
+    display: grid;
+    justify-content: center;
     align-items: center;
 }
 .welcome{
