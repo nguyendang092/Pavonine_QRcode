@@ -46,7 +46,6 @@ def generate_qr(url, timestamp):
 
 @main.route('/generate_qr_download')
 def generate_qr_download():
-    data = request.args.get('data')
     timestamp = datetime.now(pytz.timezone('Asia/Ho_Chi_Minh'))
     formatted_timestamp = timestamp.strftime('%Y-%m-%d_%H-%M-%S')  # Replacing ':' with '_'
     url = "https://myprojectflask-f4e65bcb2a22.herokuapp.com/main/qr_info"
@@ -57,7 +56,7 @@ def generate_qr_download():
 
     session['qr_creation_time'] = formatted_timestamp
     session['qr_image_path'] = qr_path
-    return redirect(url_for('main.qr_info', data=data ))
+    return redirect(url_for('main.qr_info'))
 
 @main.route('/qr_info')
 def qr_info():
