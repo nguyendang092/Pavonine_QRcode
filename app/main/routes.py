@@ -62,7 +62,6 @@ def generate_qr_download():
 def qr_info():
     qr_image_path = session.get('qr_image_path')
     creation_time = session.get('qr_creation_time')
-    data = request.args.get('data')
     qr_name = os.path.basename(qr_image_path) if qr_image_path else None
 
     if not qr_image_path or not creation_time:
@@ -71,7 +70,7 @@ def qr_info():
     with open(qr_image_path, "rb") as img_file:
         qr_image_base64 = base64.b64encode(img_file.read()).decode('utf-8')
 
-    return render_template('qr_info.html', qr_image=qr_image_base64, creation_time=creation_time, qr_name=qr_name,data=data)
+    return render_template('qr_info.html', qr_image=qr_image_base64, creation_time=creation_time, qr_name=qr_name)
 
 @main.route('/scan_qr')
 def scan_qr():
