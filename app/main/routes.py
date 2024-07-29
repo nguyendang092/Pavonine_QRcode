@@ -29,6 +29,7 @@ def generate_qr(url, timestamp):
     qr.add_data(qr_content)
     qr.make(fit=True)
     img = qr.make_image(fill_color="black", back_color="white").convert('RGB')
+    font_path = "app/static/font/FS PFBeauSansPro-XThinItalic.ttf"
     draw = ImageDraw.Draw(img)
     font = ImageFont.truetype("arial.ttf",16)
     text = f'Pavonine_QRcode_{timestamp}' 
@@ -66,6 +67,7 @@ def qr_info():
         return "QR code not found", 404
     qr_image_base64 = base64.b64encode(qr_image).decode('utf-8')
     return render_template('qr_info.html', qr_image=qr_image_base64, creation_time=creation_time, qr_name=qr_name)
+
 @main.route('/scan_qr')
 def scan_qr():
     creation_time_str = session.get('creation_qr')
