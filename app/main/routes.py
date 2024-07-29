@@ -1,4 +1,4 @@
-from flask import render_template, session, send_file,request,redirect, url_for, make_response
+from flask import render_template, session, send_file,request,redirect, url_for, make_response,Blueprint
 from datetime import datetime
 from PIL import Image, ImageDraw, ImageFont
 import pytz
@@ -6,6 +6,9 @@ import qrcode
 import base64
 from io import BytesIO
 from . import main
+
+main = Blueprint('main', __name__)
+main.secret_key = 'your_secret_key_here'
 
 @main.route('/')
 def index():
