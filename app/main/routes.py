@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, send_file,request
+from flask import Flask, render_template, session, send_file,request,redirect
 from datetime import datetime, timezone, timedelta
 import pytz
 import qrcode
@@ -32,7 +32,7 @@ def generate_qr(url, timestamp):
 def generate_qr_download():
     timestamp = datetime.now(pytz.timezone('Asia/Ho_Chi_Minh'))
     formatted_timestamp = timestamp.strftime("%Y-%m-%d_%H_%M_%S")
-    url = "http://127.0.0.1:5000/main"
+    url = "https://myprojectflask-f4e65bcb2a22.herokuapp.com/main/scan_qr"
     image = generate_qr(url, formatted_timestamp)
     session['creation_qr'] = formatted_timestamp
     buffer = BytesIO()
@@ -42,14 +42,13 @@ def generate_qr_download():
     return send_file(buffer, mimetype='image/png', as_attachment=True, download_name=file_name)
 
 @main.route('/scan_qr')
-@main.route('/scan_qr')
 def scan_qr():
     data = request.args.get('data')
     if data:
         # Ví dụ: chuyển đổi dữ liệu thành thời gian hoặc URL
         qr_creation_time = data  # hoặc parse data nếu cần
-        message = f"Thời gian tạo mã QR là: {qr_creation_time}"
+        redirect_url = f"https://myprojectflask-f4e65bcb2a22.herokuapp.com/main/scan_qr?timestamp={qr_creation_time}"
+        return redirect(redirect_url)
     else:
-        message = "Không có dữ liệu trong URL."
-
-    return render_template('scan_qr.html', message=message)
+        message = "No data in URL."
+        return render_template('scan_qr.html', message=message)
