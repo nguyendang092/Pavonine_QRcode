@@ -40,8 +40,8 @@ def generate_qr(url, timestamp):
     draw.text(text_position, text, font=font, fill='black')
     return img
 
-@main.route('generate_qr_download/<name>')
-def generate_qr_download(name):
+@main.route('generate_qr_download')
+def generate_qr_download():
     timestamp = datetime.now(pytz.timezone('Asia/Ho_Chi_Minh'))
     formatted_timestamp = timestamp.strftime('%Y-%m-%d %H:%M:%S')
     url = "https://myprojectflask-f4e65bcb2a22.herokuapp.com/main/scan_qr"
@@ -52,9 +52,8 @@ def generate_qr_download(name):
     buffer = BytesIO()
     image.save(buffer, format="PNG")
     buffer.seek(0)
-    file_name = f'QRcode_{name}_{timestamp.strftime("%Y-%m-%d_%H-%M-%S")}.png'
-    return send_file(buffer, mimetype='image/png', as_attachment=True, download_name=file_name)
-
+    session['qr_image'] = buffer.getvalue()
+    return redirect(url_for('qr_info'))
 
 @main.route('/qr_info')
 def qr_info():
@@ -67,7 +66,6 @@ def qr_info():
         return "QR code not found", 404
     qr_image_base64 = base64.b64encode(qr_image).decode('utf-8')
     return render_template('qr_info.html', qr_image=qr_image_base64, creation_time=creation_time, qr_name=qr_name)
-
 @main.route('/scan_qr')
 def scan_qr():
     creation_time_str = session.get('creation_qr')
