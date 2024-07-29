@@ -12,7 +12,7 @@
             <nav class="container">
                 <a href="{{ url_for('main.index') }}">Home</a>
                 <a href="{{ url_for('main.about') }}">About</a>
-                <a href="/main/generate_qr_download" target="_blank">Tạo mã QR</a>
+                <a href="/main/qr_info" target="_blank">Tạo mã QR</a>
                 <p><span id="login-time">{{ session.get('login_time', '') }}</span></p>
                 <h2 class="welcome">WELCOME TO PAVONINE</h2>
                 <div class="clock">
