@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var creationTime = "{{creation_time}}";
     creationTime = document.getElementById("creation-time").textContent;
     const creationDate = new Date(creationTime);
-    console.log(creationDate)
+    console.log(creationTime)
 })
 
 

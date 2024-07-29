@@ -88,4 +88,4 @@ def scan_qr():
             message = f"Mã QR chưa đủ 12 giờ. Vui lòng đợi thêm {scan_time} - {creation_qr}"
     else:
         message = "No data in URL."
-    return render_template('scan_qr.html', message=message)
+    return render_template('scan_qr.html', message=message, data=data)
