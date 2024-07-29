@@ -1,4 +1,4 @@
-from flask import render_template, session, send_file,request,redirect, url_for
+from flask import render_template, session, send_file,request,redirect, url_for, make_response
 from datetime import datetime
 from PIL import Image, ImageDraw, ImageFont
 import pytz
@@ -47,8 +47,11 @@ def generate_qr_download():
     url = "https://myprojectflask-f4e65bcb2a22.herokuapp.com/main/scan_qr"
     qr_name = f'Pavonine_QrCode_{formatted_timestamp}'
     image = generate_qr(url, formatted_timestamp)
-    session['creation_qr'] = formatted_timestamp
-    session['qr_name'] = qr_name
+
+    response = make_response(redirect(url_for('main.qr_info')))
+    response.set_cookie('creation_qr', formatted_timestamp)
+    response.set_cookie('qr_name', qr_name)
+
     buffer = BytesIO()
     image.save(buffer, format="PNG")
     buffer.seek(0)
