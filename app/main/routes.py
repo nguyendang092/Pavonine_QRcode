@@ -7,8 +7,8 @@ import base64
 from io import BytesIO
 from . import main
 
-main = Blueprint('main', __name__)
-main.secret_key = 'your_secret_key_here'
+
+
 
 @main.route('/')
 def index():
@@ -61,7 +61,7 @@ def generate_qr_download():
     session['qr_image'] = buffer.getvalue()
     return redirect(url_for('main.qr_info'))
 
-@main.route('/qr_info')
+@main.route('/main/qr_info')
 def qr_info():
     qr_image = session.get('qr_image')
     creation_time = session.get('creation_qr')
