@@ -72,5 +72,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const creationDate = new Date(creationTime);
     console.log(creationTime)
 })
-
+document.addEventListener("DOMContentLoaded", function() {
+  var message = "{{message | safe}}"
+  if (message){
+    message = document.getElementById("modalMessage").textContent;
+    $("#messageModal").modal("show");
+  }
+})
 
