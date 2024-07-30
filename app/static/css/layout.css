@@ -67,20 +67,3 @@ nav a {
     object-fit: cover;
     background-size: cover;
 }
-@media (min-width: 1200px) {
-    .slides img {
-        height: auto;
-        width: 100%;
-    }
-}
-#clock {max-width: 600px;}
-
-/* for smaller screens below 700px */
-@media only screen and (max-width: 700px) {
-  body {font-size: 1.8rem;}
-}
-
-/*for smaller screens below 300px*/
-@media only screen and (max-width: 300px) {
-  body {font-size: 1.6rem;}
-}
