@@ -80,7 +80,7 @@ def qr_info():
 def scan_qr(timestamp):
     scan_time = datetime.now(pytz.timezone('Asia/Ho_Chi_Minh'))
     try:
-            creation_qr = datetime.strptime(timestamp, '%Y%m%d%H%M%S')
+            creation_qr = datetime.strptime(timestamp, '%Y%m%d%H%M%S').replace(tzinfo=pytz.timezone('Asia/Ho_Chi_Minh'))
             time_diff = scan_time - creation_qr
             time_diff_hours = time_diff.total_seconds() / 3600
             if time_diff_hours > 12:
