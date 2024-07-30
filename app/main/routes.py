@@ -7,6 +7,7 @@ import qrcode
 import base64
 from io import BytesIO
 from . import main
+import urllib.parse
 
 UPLOAD_FOLDER = 'path/to/storage'
 if not os.path.exists(UPLOAD_FOLDER):
@@ -21,8 +22,8 @@ def index():
 def about():
     return render_template('about.html')
 
-def generate_qr(url, timestamp,data):
-    qr_content = f"{url}?data={data}"
+def generate_qr(url, timestamp):
+    qr_content = f"{url}?data={timestamp}"
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
@@ -46,13 +47,14 @@ def generate_qr(url, timestamp,data):
 
 @main.route('/generate_qr_download')
 def generate_qr_download():
-    data = request.args.get('data')
     timestamp = datetime.now(pytz.timezone('Asia/Ho_Chi_Minh'))
-    formatted_timestamp = timestamp.strftime('%Y-%m-%d_%H-%M-%S')  # Replacing ':' with '_'
-    url = "https://myprojectflask-f4e65bcb2a22.herokuapp.com/main/qr_info"
-    qr_name = f'Pavonine_QrCode_{formatted_timestamp}.png'
+    formatted_timestamp = timestamp.strftime('%Y%m%d%H%M%S') 
+    name_qrcode = timestamp.strftime('%Y_%m_%d %H_%M_%S')
+    url = "https://myprojectflask-f4e65bcb2a22.herokuapp.com/main/scan_qr"
+    url_with_param = f'{url}?data={urllib.parse.quote(formatted_timestamp)}'
+    qr_name = f'Pavonine_QrCode_{name_qrcode}.png'
     qr_path = os.path.join(UPLOAD_FOLDER, qr_name)
-    image = generate_qr(url, formatted_timestamp,data)
+    image = generate_qr(url, url_with_param)
     image.save(qr_path, format="PNG")
 
     session['qr_creation_time'] = formatted_timestamp
