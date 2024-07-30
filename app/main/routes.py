@@ -78,15 +78,18 @@ def qr_info():
 
 @main.route('/scan_qr/<timestamp>')
 def scan_qr(timestamp):
+    if not timestamp:
+        return render_template('scan_qr.html', message="Timestamp is missing in the URL.", data=None)
     scan_time = datetime.now(pytz.timezone('Asia/Ho_Chi_Minh'))
     try:
-            creation_qr = datetime.strptime(timestamp, '%Y%m%d%H%M%S').replace(tzinfo=pytz.timezone('Asia/Ho_Chi_Minh'))
-            time_diff = scan_time - creation_qr
-            time_diff_hours = time_diff.total_seconds() / 3600
-            if time_diff_hours > 12:
-                message = "Mã QR đã đủ 12 giờ. Vui lòng chuyển công đoạn tiếp theo"
-            else:
-                message = f"Mã QR chưa đủ 12 giờ. Vui lòng đợi thêm {12 - time_diff_hours:.2f} giờ"
+        tz = pytz.timezone('Asia/Ho_Chi_Minh')
+        creation_qr = tz.localize(datetime.strptime(timestamp, '%Y%m%d%H%M%S'))
+        time_diff = scan_time - creation_qr
+        time_diff_hours = time_diff.total_seconds() / 3600
+        if time_diff_hours > 12:
+            message = "Mã QR đã đủ 12 giờ. Vui lòng chuyển công đoạn tiếp theo"
+        else:
+            message = f"Mã QR chưa đủ 12 giờ. Vui lòng đợi thêm {12 - time_diff_hours:.2f} giờ"
     except ValueError:
             message = "Invalid timestamp format."
     else:
