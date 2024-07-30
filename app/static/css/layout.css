@@ -67,3 +67,6 @@ nav a {
     object-fit: cover;
     background-size: cover;
 }
+.modal{
+    background-color: aquamarine;
+}
