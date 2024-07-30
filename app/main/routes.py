@@ -22,8 +22,7 @@ def index():
 def about():
     return render_template('about.html')
 
-def generate_qr(url, timestamp):
-    qr_content = f"{url}?data={timestamp}"
+def generate_qr(url):
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
@@ -31,11 +30,12 @@ def generate_qr(url, timestamp):
         border=4,
     )
     
-    qr.add_data(qr_content)
+    qr.add_data(url)
     qr.make(fit=True)
     img = qr.make_image(fill_color="black", back_color="white").convert('RGB')
     draw = ImageDraw.Draw(img)
     font = ImageFont.load_default()
+    timestamp = url.split('data=')[-1]
     text = f'Pavonine_QRcode_{timestamp}' 
     text_bbox = draw.textbbox((0, 0), text, font=font)
     text_width = text_bbox[2] - text_bbox[0]
@@ -54,7 +54,7 @@ def generate_qr_download():
     url_with_param = f'{url}?data={urllib.parse.quote(formatted_timestamp)}'
     qr_name = f'Pavonine_QrCode_{name_qrcode}.png'
     qr_path = os.path.join(UPLOAD_FOLDER, qr_name)
-    image = generate_qr(url, url_with_param)
+    image = generate_qr(url_with_param)
     image.save(qr_path, format="PNG")
 
     session['qr_creation_time'] = formatted_timestamp
@@ -83,14 +83,16 @@ def scan_qr():
     scan_time = datetime.now(pytz.timezone('Asia/Ho_Chi_Minh'))
     data = request.args.get('data')
     if data:
-        creation_qr = datetime.strptime(creation_time_str, '%Y-%m-%d_%H-%M-%S')
-        time_diff = scan_time - creation_qr
-        time_diff_hour = time_diff.total_seconds() / 3600
-        if time_diff_hour > 12:
-            message = "Mã QR đã đủ 12 giờ. Vui lòng chuyển công đoạn tiếp theo"
-            return render_template('scan_qr.html', message=message)
-        else:
-            message = f"Mã QR chưa đủ 12 giờ. Vui lòng đợi thêm {scan_time} - {creation_qr}"
+        try:
+            creation_qr = datetime.strptime(creation_time_str, '%Y%m%d%H%M%S')
+            time_diff = scan_time - creation_qr
+            time_diff_hours = time_diff.total_seconds() / 3600
+            if time_diff_hours > 12:
+                message = "Mã QR đã đủ 12 giờ. Vui lòng chuyển công đoạn tiếp theo"
+            else:
+                message = f"Mã QR chưa đủ 12 giờ. Vui lòng đợi thêm {12 - time_diff_hours:.2f} giờ"
+        except ValueError:
+            message = "Invalid timestamp format."
     else:
         message = "No data in URL."
     return render_template('scan_qr.html', message=message, data=data)
