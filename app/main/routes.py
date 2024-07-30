@@ -48,13 +48,12 @@ def generate_qr(url):
 @main.route('/generate_qr_download')
 def generate_qr_download():
     timestamp = datetime.now(pytz.timezone('Asia/Ho_Chi_Minh'))
-    formatted_timestamp = timestamp.strftime('%Y%m%d%H%M%S') 
+    formatted_timestamp = timestamp.strftime('%Y%m%d%H%M%S')
     name_qrcode = timestamp.strftime('%Y_%m_%d %H_%M_%S')
-    url = "https://myprojectflask-f4e65bcb2a22.herokuapp.com/main/scan_qr"
-    url_with_param = f'{url}?data={urllib.parse.quote(formatted_timestamp)}'
+    url = "https://myprojectflask-f4e65bcb2a22.herokuapp.com/main/scan_qr/{formatted_timestamp}"
     qr_name = f'Pavonine_QrCode_{name_qrcode}.png'
     qr_path = os.path.join(UPLOAD_FOLDER, qr_name)
-    image = generate_qr(url_with_param)
+    image = generate_qr(url)
     image.save(qr_path, format="PNG")
 
     session['qr_creation_time'] = formatted_timestamp
@@ -77,22 +76,19 @@ def qr_info():
 
     return render_template('qr_info.html', qr_image=qr_image_base64, creation_time=creation_time,qr_name=qr_name, data=data)
 
-@main.route('/scan_qr')
-def scan_qr():
-    creation_time_str = session.get('qr_creation_time')
+@main.route('/scan_qr/<timestamp>')
+def scan_qr(timestamp):
     scan_time = datetime.now(pytz.timezone('Asia/Ho_Chi_Minh'))
-    data = request.args.get('data')
-    if data:
-        try:
-            creation_qr = datetime.strptime(creation_time_str, '%Y%m%d%H%M%S')
+    try:
+            creation_qr = datetime.strptime(timestamp, '%Y%m%d%H%M%S')
             time_diff = scan_time - creation_qr
             time_diff_hours = time_diff.total_seconds() / 3600
             if time_diff_hours > 12:
                 message = "Mã QR đã đủ 12 giờ. Vui lòng chuyển công đoạn tiếp theo"
             else:
                 message = f"Mã QR chưa đủ 12 giờ. Vui lòng đợi thêm {12 - time_diff_hours:.2f} giờ"
-        except ValueError:
+    except ValueError:
             message = "Invalid timestamp format."
     else:
         message = "No data in URL."
-    return render_template('scan_qr.html', message=message, data=data)
+    return render_template('scan_qr.html', message=message, data=timestamp)
