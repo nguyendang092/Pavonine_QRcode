@@ -92,6 +92,5 @@ def scan_qr(timestamp):
             message = f"Mã QR chưa đủ 12 giờ. Vui lòng đợi thêm {12 - time_diff_hours:.2f} giờ"
     except ValueError:
             message = "Invalid timestamp format."
-    else:
-        message = "No data in URL."
+            
     return render_template('scan_qr.html', message=message, data=timestamp)
