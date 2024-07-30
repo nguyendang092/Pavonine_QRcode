@@ -1,12 +1,9 @@
 body, html {
     margin: 0;
+    padding: 0;
     background: #fff; 
-    justify-content: center;
-    align-items: center;
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
 }
 h1,p{
     text-align: center;
@@ -48,22 +45,34 @@ header {
     font-size: 1.1rem; /* Adjust font size */
   }
 .slider {
-    width: auto;
-    height: auto;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
     position: relative;
 }
 
 .slides {
     display: flex;
-    width: 100vw;
+    width: 100%;
+    height: 100%;
     transition: transform 1s ease;
 }
 
 .slides img {
     flex-shrink: 0;
-    width: 100%;
-    display: block;
+    min-width: 100%;
+    min-height: 100%;
     object-fit: cover;
-    background-size: cover;
 }
+@media (max-aspect-ratio: 16/9) {
+    .slides img {
+      height: 100vh;
+      width: auto;
+    }
+}
+@media (min-aspect-ratio: 16/9) {
+    .slides img {
+      width: 100vw;
+      height: auto;
+    }
+  }
