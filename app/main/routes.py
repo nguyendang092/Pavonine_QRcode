@@ -86,11 +86,14 @@ def scan_qr(timestamp):
         creation_qr = tz.localize(datetime.strptime(timestamp, '%Y%m%d%H%M%S'))
         time_diff = scan_time - creation_qr
         time_diff_hours = time_diff.total_seconds() / 3600
+        time_diff_minutes = time_diff.total_seconds() / 60
         if time_diff_hours > 12:
             message = "Mã QR đã đủ 12 giờ. Vui lòng chuyển công đoạn tiếp theo"
         else:
-            message = f"Mã QR chưa đủ 12 giờ. Vui lòng đợi thêm {12 - time_diff_hours:.2f} giờ"
+            remaining_hours = 12 - int(time_diff_hours)
+            remaining_minutes = 60 - int(time_diff_minutes % 60)
+            message = f"Mã QR chưa đủ 12 giờ. Vui lòng đợi thêm {remaining_hours} giờ - {remaining_minutes} phút"
     except ValueError:
             message = "Invalid timestamp format."
-            
+
     return render_template('scan_qr.html', message=message, data=timestamp)
