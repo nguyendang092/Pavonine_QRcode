@@ -90,9 +90,9 @@ def scan_qr(timestamp):
         if time_diff_hours > 12:
             message = "Mã QR đã đủ 12 giờ. Vui lòng chuyển công đoạn tiếp theo"
         else:
-            remaining_hours = 12 - int(time_diff_hours)
+            remaining_hours = 11 - int(time_diff_hours)
             remaining_minutes = 60 - int(time_diff_minutes % 60)
-            message = f"Mã QR chưa đủ 12 giờ. Vui lòng đợi thêm {remaining_hours} giờ - {remaining_minutes} phút"
+            message = f"Mã QR chưa đủ 12 giờ. Vui lòng đợi thêm {remaining_hours} giờ: {remaining_minutes} phút"
     except ValueError:
             message = "Invalid timestamp format."
 
