@@ -42,11 +42,11 @@ header {
 .clock h2 {
     margin: 0;
 }
-nav a {
-    color: #fff;
-    margin: 0 1em;
-    text-decoration: none;
-}
+.navbar-dark .navbar-nav .nav-link {
+    color: #fff !important;
+    font-weight: bold; /* Make text bold */
+    font-size: 1.1rem; /* Adjust font size */
+  }
 .slider {
     width: auto;
     height: auto;
@@ -66,7 +66,4 @@ nav a {
     display: block;
     object-fit: cover;
     background-size: cover;
-}
-.modal{
-    background-color: aquamarine;
 }
