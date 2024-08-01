@@ -5,9 +5,7 @@ from PIL import Image, ImageDraw, ImageFont
 import pytz
 import qrcode
 import base64
-from io import BytesIO
 from . import main
-import urllib.parse
 
 UPLOAD_FOLDER = 'path/to/storage'
 if not os.path.exists(UPLOAD_FOLDER):
@@ -26,7 +24,7 @@ def generate_qr(url):
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
-        box_size=10,
+        box_size=8,
         border=4,
     )
     
