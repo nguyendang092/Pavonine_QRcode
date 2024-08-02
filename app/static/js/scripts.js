@@ -80,3 +80,11 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 })
 
+document.addEventListener('scroll', function() {
+  const navbar = document.getElementById('navbarheader');
+  if(window.scrollY > 10){
+    navbar.style.backgroundColor = rgba(0, 0, 0, 0.2);
+  } else {
+    navbar.style.backgroundColor = rgba(0, 0, 0, 0.5);
+  }
+})
