@@ -66,12 +66,6 @@ window.addEventListener("load", () => {
     }
     clock();   
 });
-document.addEventListener('DOMContentLoaded', function() {
-    var creationTime = "{{creation_time}}";
-    creationTime = document.getElementById("creation-time").textContent;
-    const creationDate = new Date(creationTime);
-    console.log(creationTime)
-})
 document.addEventListener("DOMContentLoaded", function() {
   var message = "{{message | safe}}"
   if (message){
