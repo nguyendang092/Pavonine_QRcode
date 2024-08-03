@@ -51,7 +51,7 @@ def generate_qr_download():
     url = f"https://myprojectflask-f4e65bcb2a22.herokuapp.com/main/scan_qr/{formatted_timestamp}"
     qr_name = f'Pavonine_QRcode_{formatted_timestamp}.png'
     qr_path = os.path.join(UPLOAD_FOLDER, qr_name)
-    image = generate_qr(url,formatted_timestamp)
+    image = generate_qr(url)
     image.save(qr_path, format="PNG")
 
     session['qr_creation_time'] = formatted_timestamp
