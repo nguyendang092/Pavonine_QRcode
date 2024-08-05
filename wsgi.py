@@ -1,6 +1,9 @@
-from app import create_app
+from flask import Flask
+from flask_socketio import SocketIO # type: ignore
 
-app, socketio = create_app()
+app = Flask(__name__)
+socketio = SocketIO(app)
+
 
 if __name__ == "__main__":
     socketio.run(app)
