@@ -7,7 +7,7 @@ function nextSlide() {
     slides.style.transform = `translateX(${-index * 100}vw)`;
 }
 
-setInterval(nextSlide, 15000);
+setInterval(nextSlide, 30000);
 
 window.addEventListener("load", () => {
     function clock() {
@@ -82,3 +82,15 @@ document.addEventListener('scroll', function() {
     navbar.style.backgroundColor = rgba(0, 0, 0, 0.5);
   }
 })
+function printQRcode(){
+  const printWindow = window.open('', '', 'height=600,width=1000');
+  const qrCodeContent = document.querySelector('.qr-code').outerHTML;
+  printWindow.document.write('<html><head><title>Print QR Code</title>');
+  printWindow.document.write('<style>body { font-family: Arial, sans-serif; } .qr-code { border: 1px solid #000; padding: 20px; text-align: center; }</style>');
+  printWindow.document.write('</head><body>');
+  printWindow.document.write(qrCodeContent);
+  printWindow.document.write('</body></html>');
+  printWindow.document.close();
+  printWindow.focus();
+  printWindow.print();
+}
