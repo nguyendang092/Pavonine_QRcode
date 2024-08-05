@@ -1,15 +1,20 @@
 import os
 from flask import render_template, session, request, redirect, url_for, Blueprint
 from datetime import datetime
-from PIL import Image, ImageDraw, ImageFont
-import pytz
-import qrcode
+from PIL import ImageDraw, ImageFont # type: ignore
+import pytz # type: ignore
+import qrcode # type: ignore
 import base64
 from . import main
+from app import socketio
 
 UPLOAD_FOLDER = 'path/to/storage'
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
+
+def update_content():
+    socketio.emit('refresh', {'data: New content'}, broadcast=True)
+    return "Nội dung mới đã được update"
 
 @main.route('/')
 def index():

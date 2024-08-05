@@ -13,6 +13,7 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" 
     rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.min.js"></script>
 </head>
 <body>
     <header>
@@ -56,4 +57,10 @@
         {% block content %}{% endblock %}
     </main>
 </body>
+<script type="text/javascript">
+  var socket = io.connect('http://' + document.domain + ':' + location.port);
+  socket.on('refresh', function(msg) {
+      window.location.reload();  // Làm mới trang khi có nội dung mới
+  });
+</script>
 </html>
