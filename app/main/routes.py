@@ -1,7 +1,7 @@
 import os
 from flask import render_template, session, request, redirect, url_for, Blueprint
 from datetime import datetime
-from PIL import ImageDraw, ImageFont # type: ignore
+from PIL import ImageDraw, ImageFont, Image # type: ignore
 import pytz # type: ignore
 import qrcode # type: ignore
 import base64
@@ -26,16 +26,22 @@ def about():
     return render_template('about.html')
 
 def generate_qr(url):
+    canvas_width, canvas_height = 945, 591
+    qr_size = 472
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
         box_size=8,
         border=4,
     )
-    
     qr.add_data(url)
     qr.make(fit=True)
     img = qr.make_image(fill_color="black", back_color="white").convert('RGB')
+    qr_img = qr_img.resize((qr_size, qr_size), Image.ANTIALIAS)
+    canvas = Image.new("RGB", (canvas_width, canvas_height), "white")
+    qr_position = ((canvas_width - qr_size) // 2, (canvas_height - qr_size) // 2)
+    canvas.paste(qr_img, qr_position)
+
     draw = ImageDraw.Draw(img)
     font = ImageFont.load_default()
     timestamp = url.split('data=')[-1]
@@ -44,9 +50,27 @@ def generate_qr(url):
     text_width = text_bbox[2] - text_bbox[0]
     text_height = text_bbox[3] - text_bbox[1]
     qr_width, qr_height = img.size
-    text_position = ((qr_width - text_width) / 2, qr_height - text_height - 10)
+    text_position = ((canvas_width  - text_width) / 2, canvas_height - text_height - 10)
     draw.text(text_position, text, font=font, fill='black')
-    return img
+    
+    return canvas   
+
+#def create_1x2_qr_layout(url):
+    # Generate two QR codes
+    qr_image_1 = generate_qr(url)
+    qr_image_2 = generate_qr(url)
+
+    # Create an empty image with twice the width of one QR code image to hold both in 1x2 layout
+    total_width = qr_image_1.width 
+    total_height = qr_image_1.height
+    layout_image = Image.new("RGB", (total_width, total_height), "white")
+
+    # Paste both QR images side by side
+    layout_image.paste(qr_image_1, (0, 0))
+    layout_image.paste(qr_image_2, (qr_image_1.width, 0))
+
+    return layout_image
+
 
 @main.route('/generate_qr_download')
 def generate_qr_download():
@@ -96,6 +120,6 @@ def scan_qr(timestamp):
             remaining_minutes = 60 - int(time_diff_minutes % 60)
             message = f"Mã QR chưa đủ 12 giờ. Vui lòng đợi thêm {remaining_hours} giờ: {remaining_minutes} phút"
     except ValueError:
-            message = "Invalid timestamp format."
+            message = "Mã QR bị lỗi. Vui lòng tạo lại mã QR."
 
     return render_template('scan_qr.html', message=message, data=timestamp)
