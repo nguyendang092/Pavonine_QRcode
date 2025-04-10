@@ -76,7 +76,7 @@ def generate_qr(url):
 def generate_qr_download():
     timestamp = datetime.now(pytz.timezone('Asia/Ho_Chi_Minh'))
     formatted_timestamp = timestamp.strftime('%Y%m%d%H%M%S')
-    url = f"https://pavonineqrcode-5a090ca774aa.herokuapp.com/main/scan_qr/{formatted_timestamp}"
+    url = f"https://pavocode-0c322a491d91.herokuapp.com/main/scan_qr/{formatted_timestamp}"
     qr_name = f'Pavonine_QRcode_{formatted_timestamp}.png'
     qr_path = os.path.join(UPLOAD_FOLDER, qr_name)
     image = generate_qr(url)
