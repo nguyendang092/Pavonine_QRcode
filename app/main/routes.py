@@ -26,8 +26,13 @@ def about():
     return render_template('about.html')
 
 def generate_qr(url):
+    from PIL import Image, ImageDraw, ImageFont
+    import qrcode
+
     canvas_width, canvas_height = 945, 591
     qr_size = 472
+
+    # Tạo QR code
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
@@ -36,24 +41,38 @@ def generate_qr(url):
     )
     qr.add_data(url)
     qr.make(fit=True)
-    img = qr.make_image(fill_color="black", back_color="white").convert('RGB')
+    qr_img = qr.make_image(fill_color="black", back_color="white").convert('RGB')
+
+    # Resize ảnh QR
     qr_img = qr_img.resize((qr_size, qr_size), Image.ANTIALIAS)
+
+    # Tạo canvas trắng
     canvas = Image.new("RGB", (canvas_width, canvas_height), "white")
+
+    # Dán QR code vào giữa canvas
     qr_position = ((canvas_width - qr_size) // 2, (canvas_height - qr_size) // 2)
     canvas.paste(qr_img, qr_position)
 
-    draw = ImageDraw.Draw(img)
+    # Ghi text dưới ảnh
+    draw = ImageDraw.Draw(canvas)
     font = ImageFont.load_default()
-    timestamp = url.split('data=')[-1]
-    text = f'Pavonine_QRcode_{timestamp}' 
+
+    # Lấy timestamp từ URL
+    try:
+        timestamp = url.split('data=')[-1]
+    except:
+        timestamp = "unknown"
+
+    text = f'Pavonine_QRcode_{timestamp}'
     text_bbox = draw.textbbox((0, 0), text, font=font)
     text_width = text_bbox[2] - text_bbox[0]
     text_height = text_bbox[3] - text_bbox[1]
-    qr_width, qr_height = img.size
-    text_position = ((canvas_width  - text_width) / 2, canvas_height - text_height - 10)
+    text_position = ((canvas_width - text_width) / 2, canvas_height - text_height - 10)
+
     draw.text(text_position, text, font=font, fill='black')
-    
-    return canvas   
+
+    return canvas
+ 
 
 #def create_1x2_qr_layout(url):
     # Generate two QR codes
