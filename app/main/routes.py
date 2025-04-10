@@ -1,9 +1,9 @@
 import os
 from flask import render_template, session, request, redirect, url_for, Blueprint
 from datetime import datetime
-from PIL import ImageDraw, ImageFont, Image # type: ignore
-import pytz # type: ignore
-import qrcode # type: ignore
+from PIL import ImageDraw, ImageFont, Image
+import pytz
+import qrcode 
 import base64
 from . import main
 from app import socketio
@@ -44,8 +44,7 @@ def generate_qr(url):
     qr_img = qr.make_image(fill_color="black", back_color="white").convert('RGB')
 
     # Resize ảnh QR
-    qr_img = qr_img.resize((qr_size, qr_size), Image.ANTIALIAS)
-
+    qr_img = qr_img.resize((qr_size, qr_size), Image.Resampling.LANCZOS)
     # Tạo canvas trắng
     canvas = Image.new("RGB", (canvas_width, canvas_height), "white")
 
