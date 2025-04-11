@@ -24,7 +24,15 @@
           </button>
     </div>
     <div class="qr-code">
-        <p id="creation-time">Creation Time: {{ creation_time}}</p>
+        <p id="creation-time">Creation Time: {{ creation_time}}
+          {% if model %}
+            <p style="font-size: 22px;"><strong>📦 Model:</strong> {{ model }}</p>
+          {% endif %}
+
+          {% if quantity %}
+            <p style="font-size: 22px;"><strong>🔢 Số lượng:</strong> {{ quantity }}</p>
+          {% endif %}
+        </p>
         <img id="qr_code" src="data:image/png;base64,{{ qr_image }}" alt="QR Code">
 </div>
 {% endblock %}

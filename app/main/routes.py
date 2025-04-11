@@ -3,7 +3,7 @@ from flask import render_template, session, request, redirect, url_for, Blueprin
 from datetime import datetime
 from PIL import ImageDraw, ImageFont, Image
 import pytz
-from pathlib import Path
+import os
 import base64
 from . import main
 from app import socketio
@@ -48,32 +48,6 @@ def generate_qr(url, timestamp, model, quantity):
     canvas = Image.new("RGB", (canvas_width, canvas_height), "white")
     qr_position = ((canvas_width - qr_size) // 2, 10)
     canvas.paste(qr_img, qr_position)
-
-    # In text dưới QR
-    draw = ImageDraw.Draw(canvas)
-
-    # Font rõ ràng, dễ thấy hơn
-    font_path = Path("static/fonts/robo.ttf")
-    try:
-        font_big = ImageFont.truetype(str(font_path), 26)
-    except:
-        font_big = ImageFont.load_default()
-
-    model_text = f'Model: {model}'
-    quantity_text = f'Số lượng: {quantity}'
-
-    model_bbox = draw.textbbox((0, 0), model_text, font=font_big)
-    quantity_bbox = draw.textbbox((0, 0), quantity_text, font=font_big)
-
-    model_x = (canvas_width - (model_bbox[2] - model_bbox[0])) / 2
-    quantity_x = (canvas_width - (quantity_bbox[2] - quantity_bbox[0])) / 2
-
-    model_y = qr_position[1] + qr_size + 10
-    quantity_y = model_y + 20  # khoảng cách giữa dòng
-
-    draw.text((model_x, model_y), model_text, font=font_big, fill='black')
-    draw.text((quantity_x, quantity_y), quantity_text, font=font_big, fill='black')
-
     return canvas
 
 
@@ -96,13 +70,16 @@ def generate_qr_download():
 
     session['qr_creation_time'] = formatted_timestamp
     session['qr_image_path'] = qr_path
-    return redirect(url_for('main.qr_info'))
+    return redirect(url_for('main.qr_info', model=model, quantity=quantity))
+
 
 @main.route('/qr_info')
 def qr_info():
     qr_image_path = session.get('qr_image_path')
     creation_time = session.get('qr_creation_time')
     data = request.args.get('data')
+    model = request.args.get('model', 'UnknownModel')
+    quantity = request.args.get('quantity', '0')
     qr_name = os.path.basename(qr_image_path) if qr_image_path else None
 
 
@@ -112,7 +89,16 @@ def qr_info():
     with open(qr_image_path, "rb") as img_file:
         qr_image_base64 = base64.b64encode(img_file.read()).decode('utf-8')
 
-    return render_template('qr_info.html', qr_image=qr_image_base64, creation_time=creation_time,qr_name=qr_name, data=data)
+    return render_template(
+    'qr_info.html',
+    qr_image=qr_image_base64,
+    creation_time=creation_time,
+    qr_name=qr_name,
+    data=data,
+    model=model,
+    quantity=quantity
+)
+
 
 @main.route('/scan_qr/<timestamp>')
 def scan_qr(timestamp):
