@@ -3,7 +3,7 @@ from flask import render_template, session, request, redirect, url_for, Blueprin
 from datetime import datetime
 from PIL import ImageDraw, ImageFont, Image
 import pytz
-import qrcode 
+from pathlib import Path
 import base64
 from . import main
 from app import socketio
@@ -53,8 +53,9 @@ def generate_qr(url, timestamp, model, quantity):
     draw = ImageDraw.Draw(canvas)
 
     # Font rõ ràng, dễ thấy hơn
+    font_path = Path("static/fonts/robo.ttf")
     try:
-        font_big = ImageFont.truetype("arialbd.ttf", 22)  # font đậm nếu có
+        font_big = ImageFont.truetype(str(font_path), 26)
     except:
         font_big = ImageFont.load_default()
 
@@ -68,7 +69,7 @@ def generate_qr(url, timestamp, model, quantity):
     quantity_x = (canvas_width - (quantity_bbox[2] - quantity_bbox[0])) / 2
 
     model_y = qr_position[1] + qr_size + 10
-    quantity_y = model_y + 30  # khoảng cách giữa dòng
+    quantity_y = model_y + 20  # khoảng cách giữa dòng
 
     draw.text((model_x, model_y), model_text, font=font_big, fill='black')
     draw.text((quantity_x, quantity_y), quantity_text, font=font_big, fill='black')
@@ -131,13 +132,13 @@ def scan_qr(timestamp):
         time_diff_minutes = time_diff.total_seconds() / 60
 
         if time_diff_hours > 12:
-            message = "✅ Mã QR đã đủ 12 giờ. Vui lòng chuyển công đoạn tiếp theo"
+            message = "✅ Mã QR đã đủ 12 giờ. Vui lòng chuyển công đoạn tiếp theo.✅ QR 코드 생성 후 12시간이 지났습니다. 다음 단계로 진행해 주세요."
         else:
             remaining_hours = 11 - int(time_diff_hours)
             remaining_minutes = 60 - int(time_diff_minutes % 60)
-            message = f"⏳ Mã QR chưa đủ 12 giờ. Vui lòng đợi thêm {remaining_hours} giờ: {remaining_minutes} phút."
+            message = f"⏳ Mã QR chưa đủ 12 giờ. Vui lòng đợi thêm {remaining_hours} giờ: {remaining_minutes} phút.⏳ QR 코드 생성 후 12시간이 아직 지나지 않았습니다. {remaining_hours}시간 {remaining_minutes}분 더 기다려 주세요."
     except ValueError:
-        message = "❌ Mã QR bị lỗi. Vui lòng tạo lại mã QR."
+        message = "❌ Mã QR bị lỗi. Vui lòng tạo lại mã QR.❌ QR 코드에 오류가 있습니다. QR 코드를 다시 생성해 주세요."
 
     return render_template(
     'scan_qr.html',
