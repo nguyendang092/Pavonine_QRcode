@@ -27,7 +27,6 @@
                       <li class="nav-item">
                         <a class="nav-link alink" href="{{ url_for('main.index') }}">PAVONINE</a>
                       </li>
-                      
                       <!--<li class="nav-item">
                         <a class="nav-link" href="{{ url_for('main.about') }}">Press</a>
                       </li>
@@ -42,9 +41,15 @@
                       </li>
                       <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('main.about') }}">Assembly</a>
+                      </li>-->
+                      <li class="nav-item">
+                        <a class="nav-link" href="/main/generate_qr_download" target="_blank" id="generate_qr_link">Tạo mã QR</a>
                       </li>
-                      <li class="nav-item">--> 
-                        <a class="nav-link" href="/main/generate_qr_download" target="_blank">Tạo mã QR</a>
+                      <li class="nav-item">
+                        <input class="nav-link" id="name_model" placeholder="Nhập mã model"></a>
+                      </li>
+                      <li class="nav-item">
+                        <input class="nav-link" id="quantity" placeholder="SỐ LƯỢNG" type="number">
                       </li>
                     </ul>   
                     <div class="clock ml-3">
@@ -61,6 +66,19 @@
   var socket = io.connect('http://' + document.domain + ':' + location.port);
   socket.on('refresh', function(msg) {
       window.location.reload();  // Làm mới trang khi có nội dung mới
+  });
+  document.getElementById('generate_qr_link').addEventListener('click', function (event) {
+    const model = document.getElementById('name_model').value.trim();
+    const quantity = document.getElementById('quantity').value.trim();
+
+    if (model === '' || quantity === '') {
+      alert('Vui lòng nhập đầy đủ model và số lượng!');
+      event.preventDefault();
+      return;
+    }
+
+    const url = `/main/generate_qr_download?model=${encodeURIComponent(model)}&quantity=${encodeURIComponent(quantity)}`;
+    this.href = url;
   });
 </script>
 </html>

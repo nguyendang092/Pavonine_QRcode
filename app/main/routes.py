@@ -25,12 +25,12 @@ def index():
 def about():
     return render_template('about.html')
 
-def generate_qr(url):
+def generate_qr(url, timestamp, model, quantity):
     from PIL import Image, ImageDraw, ImageFont
     import qrcode
 
-    canvas_width, canvas_height = 945, 591
-    qr_size = 472
+    canvas_width, canvas_height = 645, 645  # tăng chiều cao thêm
+    qr_size = 300
 
     # Tạo QR code
     qr = qrcode.QRCode(
@@ -42,62 +42,55 @@ def generate_qr(url):
     qr.add_data(url)
     qr.make(fit=True)
     qr_img = qr.make_image(fill_color="black", back_color="white").convert('RGB')
-
-    # Resize ảnh QR
     qr_img = qr_img.resize((qr_size, qr_size), Image.Resampling.LANCZOS)
-    # Tạo canvas trắng
-    canvas = Image.new("RGB", (canvas_width, canvas_height), "white")
 
-    # Dán QR code vào giữa canvas
-    qr_position = ((canvas_width - qr_size) // 2, (canvas_height - qr_size) // 2)
+    # Tạo canvas
+    canvas = Image.new("RGB", (canvas_width, canvas_height), "white")
+    qr_position = ((canvas_width - qr_size) // 2, 10)
     canvas.paste(qr_img, qr_position)
 
-    # Ghi text dưới ảnh
+    # In text dưới QR
     draw = ImageDraw.Draw(canvas)
-    font = ImageFont.load_default()
 
-    # Lấy timestamp từ URL
+    # Font rõ ràng, dễ thấy hơn
     try:
-        timestamp = url.split('data=')[-1]
+        font_big = ImageFont.truetype("arialbd.ttf", 22)  # font đậm nếu có
     except:
-        timestamp = "unknown"
+        font_big = ImageFont.load_default()
 
-    text = f'Pavonine_QRcode_{timestamp}'
-    text_bbox = draw.textbbox((0, 0), text, font=font)
-    text_width = text_bbox[2] - text_bbox[0]
-    text_height = text_bbox[3] - text_bbox[1]
-    text_position = ((canvas_width - text_width) / 2, canvas_height - text_height - 10)
+    model_text = f'Model: {model}'
+    quantity_text = f'Số lượng: {quantity}'
 
-    draw.text(text_position, text, font=font, fill='black')
+    model_bbox = draw.textbbox((0, 0), model_text, font=font_big)
+    quantity_bbox = draw.textbbox((0, 0), quantity_text, font=font_big)
+
+    model_x = (canvas_width - (model_bbox[2] - model_bbox[0])) / 2
+    quantity_x = (canvas_width - (quantity_bbox[2] - quantity_bbox[0])) / 2
+
+    model_y = qr_position[1] + qr_size + 10
+    quantity_y = model_y + 30  # khoảng cách giữa dòng
+
+    draw.text((model_x, model_y), model_text, font=font_big, fill='black')
+    draw.text((quantity_x, quantity_y), quantity_text, font=font_big, fill='black')
 
     return canvas
- 
 
-#def create_1x2_qr_layout(url):
-    # Generate two QR codes
-    qr_image_1 = generate_qr(url)
-    qr_image_2 = generate_qr(url)
-
-    # Create an empty image with twice the width of one QR code image to hold both in 1x2 layout
-    total_width = qr_image_1.width 
-    total_height = qr_image_1.height
-    layout_image = Image.new("RGB", (total_width, total_height), "white")
-
-    # Paste both QR images side by side
-    layout_image.paste(qr_image_1, (0, 0))
-    layout_image.paste(qr_image_2, (qr_image_1.width, 0))
-
-    return layout_image
 
 
 @main.route('/generate_qr_download')
 def generate_qr_download():
+    model = request.args.get('model', 'UnknownModel')
+    quantity = request.args.get('quantity', '0')
+
     timestamp = datetime.now(pytz.timezone('Asia/Ho_Chi_Minh'))
     formatted_timestamp = timestamp.strftime('%Y%m%d%H%M%S')
-    url = f"https://pavocode-0c322a491d91.herokuapp.com/main/scan_qr/{formatted_timestamp}"
-    qr_name = f'Pavonine_QRcode_{formatted_timestamp}.png'
+
+    url = f"https://pavocode-0c322a491d91.herokuapp.com/main/scan_qr/{formatted_timestamp}?model={model}&quantity={quantity}"
+
+    qr_name = f'Pavonine_{formatted_timestamp}.png'
     qr_path = os.path.join(UPLOAD_FOLDER, qr_name)
-    image = generate_qr(url)
+
+    image = generate_qr(url, formatted_timestamp, model, quantity)
     image.save(qr_path, format="PNG")
 
     session['qr_creation_time'] = formatted_timestamp
@@ -122,22 +115,35 @@ def qr_info():
 
 @main.route('/scan_qr/<timestamp>')
 def scan_qr(timestamp):
+    model = request.args.get('model', 'UnknownModel')
+    quantity = request.args.get('quantity', '0')
+
     if not timestamp:
         return render_template('scan_qr.html', message="Timestamp is missing in the URL.", data=None)
+
     scan_time = datetime.now(pytz.timezone('Asia/Ho_Chi_Minh'))
+
     try:
         tz = pytz.timezone('Asia/Ho_Chi_Minh')
         creation_qr = tz.localize(datetime.strptime(timestamp, '%Y%m%d%H%M%S'))
         time_diff = scan_time - creation_qr
         time_diff_hours = time_diff.total_seconds() / 3600
         time_diff_minutes = time_diff.total_seconds() / 60
+
         if time_diff_hours > 12:
-            message = "Mã QR đã đủ 12 giờ. Vui lòng chuyển công đoạn tiếp theo"
+            message = "✅ Mã QR đã đủ 12 giờ. Vui lòng chuyển công đoạn tiếp theo"
         else:
             remaining_hours = 11 - int(time_diff_hours)
             remaining_minutes = 60 - int(time_diff_minutes % 60)
-            message = f"Mã QR chưa đủ 12 giờ. Vui lòng đợi thêm {remaining_hours} giờ: {remaining_minutes} phút"
+            message = f"⏳ Mã QR chưa đủ 12 giờ. Vui lòng đợi thêm {remaining_hours} giờ: {remaining_minutes} phút."
     except ValueError:
-            message = "Mã QR bị lỗi. Vui lòng tạo lại mã QR."
+        message = "❌ Mã QR bị lỗi. Vui lòng tạo lại mã QR."
 
-    return render_template('scan_qr.html', message=message, data=timestamp)
+    return render_template(
+    'scan_qr.html',
+    message=message,
+    data=timestamp,
+    model=model,
+    quantity=quantity
+)
+
