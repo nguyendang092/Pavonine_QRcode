@@ -129,6 +129,7 @@ def scan_qr(timestamp):
 
     return render_template(
     'scan_qr.html',
+    creation_time_str=creation_time_str,
     message=message,
     data=timestamp,
     model=model,
