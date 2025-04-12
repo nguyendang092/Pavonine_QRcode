@@ -11,7 +11,7 @@
         </button>
       </div>
       <div class="modal-body" id="modalMessage">
-        <p style="font-size: 18px;">{{ message }}</p>
+        <p style="font-size: 18px;">{{ message | safe }}</p>
         {% if model %}
           <p style="font-size: 22px;"><strong>📦 Model(모델):</strong> {{ model }}</p>
         {% endif %}
