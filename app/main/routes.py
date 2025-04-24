@@ -107,25 +107,30 @@ def scan_qr(timestamp):
 
     if not timestamp:
         return render_template('scan_qr.html', message="Timestamp is missing in the URL.", data=None)
-
     scan_time = datetime.now(pytz.timezone('Asia/Ho_Chi_Minh'))
 
-    try:
-        tz = pytz.timezone('Asia/Ho_Chi_Minh')
-        creation_qr = tz.localize(datetime.strptime(timestamp, '%Y%m%d%H%M%S'))
-        creation_time_str = creation_qr.strftime('%Y-%m-%d %H:%M:%S')
-        time_diff = scan_time - creation_qr
-        time_diff_hours = time_diff.total_seconds() / 3600
-        time_diff_minutes = time_diff.total_seconds() / 60
+    if "9A" in model:
+        message = """Thông tin mã qr như sau:"""
+    else:
+        try:
+            tz = pytz.timezone('Asia/Ho_Chi_Minh')
+            creation_qr = tz.localize(datetime.strptime(timestamp, '%Y%m%d%H%M%S'))
+            creation_time_str = creation_qr.strftime('%Y-%m-%d %H:%M:%S')
+            time_diff = scan_time - creation_qr
+            time_diff_hours = time_diff.total_seconds() / 3600
+            time_diff_minutes = time_diff.total_seconds() / 60
 
-        if time_diff_hours > 12:
-            message = f"""✅ Mã QR đã đủ 12 giờ. Vui lòng chuyển công đoạn tiếp theo.<br>✅ QR 코드 생성 후 12시간이 지났습니다. 다음 단계로 진행해 주세요."""
-        else:
-            remaining_hours = 11 - int(time_diff_hours)
-            remaining_minutes = 60 - int(time_diff_minutes % 60)
-            message = f"""⏳ Mã QR chưa đủ 12 giờ. Vui lòng đợi thêm {remaining_hours} giờ: {remaining_minutes} phút.<br>⏳ QR 코드 생성 후 12시간이 아직 지나지 않았습니다. {remaining_hours}시간 {remaining_minutes}분 더 기다려 주세요."""
-    except ValueError:
-        message = "❌ Mã QR bị lỗi. Vui lòng tạo lại mã QR.\n❌ QR 코드에 오류가 있습니다. QR 코드를 다시 생성해 주세요."
+            if time_diff_hours > 12:
+                message = """✅ Mã QR đã đủ 12 giờ. Vui lòng chuyển công đoạn tiếp theo.<br>✅ QR 코드 생성 후 12시간이 지났습니다. 다음 단계로 진행해 주세요."""
+            else:
+                remaining_hours = 11 - int(time_diff_hours)
+                remaining_minutes = 60 - int(time_diff_minutes % 60)
+                message = f"""⏳ Mã QR chưa đủ 12 giờ. Vui lòng đợi thêm {remaining_hours} giờ: {remaining_minutes} phút.<br>⏳ QR 코드 생성 후 12시간이 아직 지나지 않았습니다. {remaining_hours}시간 {remaining_minutes}분 더 기다려 주세요."""
+        except ValueError:
+            creation_time_str = None
+            message = "❌ Mã QR bị lỗi. Vui lòng tạo lại mã QR.<br>❌ QR 코드에 오류가 있습니다. QR 코드를 다시 생성해 주세요."
+
+    
 
     return render_template(
     'scan_qr.html',
