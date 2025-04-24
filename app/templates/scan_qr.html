@@ -13,6 +13,9 @@
       <div class="modal-body" id="modalMessage">
         <p style="font-size: 18px;">{{ message | safe }}</p>
         {% if model %}
+          <p style="font-size: 22px;"><strong>📦 Item Status(상품 상태):</strong> {{ Status }}</p>
+        {% endif %}
+        {% if model %}
           <p style="font-size: 22px;"><strong>📦 Model(모델):</strong> {{ model }}</p>
         {% endif %}
         {% if quantity %}

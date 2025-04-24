@@ -104,7 +104,7 @@ def qr_info():
 def scan_qr(timestamp):
     model = request.args.get('model', 'UnknownModel')
     quantity = request.args.get('quantity', '0')
-
+    status = "OK"
     if not timestamp:
         return render_template('scan_qr.html', message="Timestamp is missing in the URL.", data=None)
     scan_time = datetime.now(pytz.timezone('Asia/Ho_Chi_Minh'))
@@ -113,7 +113,7 @@ def scan_qr(timestamp):
         tz = pytz.timezone('Asia/Ho_Chi_Minh')
         creation_qr = tz.localize(datetime.strptime(timestamp, '%Y%m%d%H%M%S'))
         creation_time_str = creation_qr.strftime('%Y-%m-%d %H:%M:%S')
-        message = """🔍 Thông tin mã QR như sau:<br> Item Status: OK"""
+        message = """🔍 Thông tin mã QR như sau:<br>"""
     else:
         try:
             tz = pytz.timezone('Asia/Ho_Chi_Minh')
@@ -141,6 +141,8 @@ def scan_qr(timestamp):
     message=message,
     data=timestamp,
     model=model,
-    quantity=quantity
+    quantity=quantity,
+    status = status
+
 )
 
