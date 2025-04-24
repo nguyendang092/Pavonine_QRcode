@@ -113,7 +113,7 @@ def scan_qr(timestamp):
         tz = pytz.timezone('Asia/Ho_Chi_Minh')
         creation_qr = tz.localize(datetime.strptime(timestamp, '%Y%m%d%H%M%S'))
         creation_time_str = creation_qr.strftime('%Y-%m-%d %H:%M:%S')
-        message = """🔍 Thông tin mã QR như sau:"""
+        message = """🔍 Thông tin mã QR như sau:<br> Item Status: OK"""
     else:
         try:
             tz = pytz.timezone('Asia/Ho_Chi_Minh')
