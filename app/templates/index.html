@@ -3,15 +3,77 @@
 {% block title %}PAVONINE VINA{% endblock %}
 
 {% block content %}
-        <div class="slider">
-            <div class="slides">
-                <img src="{{ url_for('static', filename='image/total.jpg') }}" alt="Image 1">
-                <img src="{{ url_for('static', filename='image/Press.jpg') }}" alt="Image 2">
-                <img src="{{ url_for('static', filename='image/MC.jpg') }}" alt="Image 3">
-                <img src="{{ url_for('static', filename='image/MC_NG.jpg') }}" alt="Image 5">
-                <img src="{{ url_for('static', filename='image/Hl.jpg') }}" alt="Image 4">
-                <img src="{{ url_for('static', filename='image/Anodizing.jpg') }}" alt="Image 6">
-                <img src="{{ url_for('static', filename='image/Assembly.jpg') }}" alt="Image 7">
-            </div>
-        </div>
+<style>
+    .slider {
+        position: relative;
+        width: 100%;
+        max-width: 800px;
+        margin: auto;
+        overflow: hidden;
+    }
+
+    .slides {
+        display: flex;
+        transition: transform 0.5s ease-in-out;
+        width: calc(100% * 7); /* 7 images */
+    }
+
+    .slides img {
+        width: 100%;
+        flex-shrink: 0;
+    }
+
+    .nav-button {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+        z-index: 10;
+    }
+
+    .prev {
+        left: 10px;
+    }
+
+    .next {
+        right: 10px;
+    }
+</style>
+
+<div class="slider">
+    <div class="slides" id="slides">
+        <img src="{{ url_for('static', filename='image/total.jpg') }}" alt="Image 1">
+        <img src="{{ url_for('static', filename='image/Press.jpg') }}" alt="Image 2">
+        <img src="{{ url_for('static', filename='image/MC.jpg') }}" alt="Image 3">
+        <img src="{{ url_for('static', filename='image/MC_NG.jpg') }}" alt="Image 4">
+        <img src="{{ url_for('static', filename='image/Hl.jpg') }}" alt="Image 5">
+        <img src="{{ url_for('static', filename='image/Anodizing.jpg') }}" alt="Image 6">
+        <img src="{{ url_for('static', filename='image/Assembly.jpg') }}" alt="Image 7">
+    </div>
+    <button class="nav-button prev" onclick="moveSlide(-1)">❮</button>
+    <button class="nav-button next" onclick="moveSlide(1)">❯</button>
+</div>
+
+<script>
+    let currentIndex = 0;
+    const totalImages = 7;
+    const slideContainer = document.getElementById('slides');
+
+    function moveSlide(direction) {
+        currentIndex += direction;
+
+        if (currentIndex < 0) {
+            currentIndex = totalImages - 1;
+        } else if (currentIndex >= totalImages) {
+            currentIndex = 0;
+        }
+
+        slideContainer.style.transform = `translateX(-${currentIndex * 100}%)`;
+    }
+</script>
 {% endblock %}
+
