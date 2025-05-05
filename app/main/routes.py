@@ -65,18 +65,18 @@ def generate_qr_download():
     image.save(qr_path, format="PNG")
     session['qr_creation_time'] = formatted_timestamp
     session['qr_image_path'] = qr_path
-    return redirect(url_for('main.qr_info', model=model, quantity=quantity))
+    return redirect(url_for('main.qr_info', model=model, quantity=quantity,timestamp=timestamp))
 
 
 @main.route('/qr_info')
 def qr_info():
     qr_image_path = session.get('qr_image_path')
-    creation_time = request.args.get("creation_time",'Unknow')
+    timestamp = request.args.get("timestamp",'Unknow')
     data = request.args.get('data')
     model = request.args.get('model', 'UnknownModel')
     quantity = request.args.get('quantity', '0')
     qr_name = os.path.basename(qr_image_path) if qr_image_path else None
-    if not qr_image_path or not creation_time:
+    if not qr_image_path or not timestamp:
         return "QR code not found", 404
 
     with open(qr_image_path, "rb") as img_file:
@@ -85,7 +85,7 @@ def qr_info():
     return render_template(
     'qr_info.html',
     qr_image=qr_image_base64,
-    creation_time=creation_time,
+    timestamp=timestamp,
     qr_name=qr_name,
     data=data,
     model=model,
