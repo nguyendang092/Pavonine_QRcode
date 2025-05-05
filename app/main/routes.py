@@ -57,9 +57,7 @@ def generate_qr_download():
     model = request.args.get('model', 'UnknownModel')
     quantity = request.args.get('quantity', '0')
     timestamp = datetime.now(pytz.timezone('Asia/Ho_Chi_Minh'))
-    tz = pytz.timezone('Asia/Ho_Chi_Minh')
-    creation_qr = tz.localize(datetime.strptime(timestamp, '%Y%m%d%H%M%S'))
-    creation_time_str = creation_qr.strftime('%Y-%m-%d %H:%M:%S')
+    creation_time_str = timestamp.strftime('%Y-%m-%d %H:%M:%S')
     formatted_timestamp = timestamp.strftime('%Y%m%d%H%M%S')
     url = f"https://pavocode-0c322a491d91.herokuapp.com/main/scan_qr/{formatted_timestamp}?model={model}&quantity={quantity}"
     qr_name = f'Pavonine_{formatted_timestamp}.png'
@@ -88,7 +86,7 @@ def qr_info():
     return render_template(
     'qr_info.html',
     qr_image=qr_image_base64,
-    timestamp=timestamp,
+    creation_time_str=creation_time_str,
     qr_name=qr_name,
     data=data,
     model=model,
