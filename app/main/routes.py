@@ -57,6 +57,9 @@ def generate_qr_download():
     model = request.args.get('model', 'UnknownModel')
     quantity = request.args.get('quantity', '0')
     timestamp = datetime.now(pytz.timezone('Asia/Ho_Chi_Minh'))
+    tz = pytz.timezone('Asia/Ho_Chi_Minh')
+    creation_qr = tz.localize(datetime.strptime(timestamp, '%Y%m%d%H%M%S'))
+    creation_time_str = creation_qr.strftime('%Y-%m-%d %H:%M:%S')
     formatted_timestamp = timestamp.strftime('%Y%m%d%H%M%S')
     url = f"https://pavocode-0c322a491d91.herokuapp.com/main/scan_qr/{formatted_timestamp}?model={model}&quantity={quantity}"
     qr_name = f'Pavonine_{formatted_timestamp}.png'
@@ -65,18 +68,18 @@ def generate_qr_download():
     image.save(qr_path, format="PNG")
     session['qr_creation_time'] = formatted_timestamp
     session['qr_image_path'] = qr_path
-    return redirect(url_for('main.qr_info', model=model, quantity=quantity,timestamp=timestamp))
+    return redirect(url_for('main.qr_info', model=model, quantity=quantity,creation_time_str=creation_time_str))
 
 
 @main.route('/qr_info')
 def qr_info():
     qr_image_path = session.get('qr_image_path')
-    timestamp = request.args.get("timestamp",'Unknow')
+    creation_time_str = request.args.get("creation_time_str",'Unknow')
     data = request.args.get('data')
     model = request.args.get('model', 'UnknownModel')
     quantity = request.args.get('quantity', '0')
     qr_name = os.path.basename(qr_image_path) if qr_image_path else None
-    if not qr_image_path or not timestamp:
+    if not qr_image_path or not creation_time_str:
         return "QR code not found", 404
 
     with open(qr_image_path, "rb") as img_file:
