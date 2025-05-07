@@ -52,6 +52,9 @@ h1,p{
 h2 {
     text-transform: uppercase;
 }
+h3{
+  text-align: center;
+}
 main{
     justify-content: center;
     align-items: center;
