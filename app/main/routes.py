@@ -108,6 +108,11 @@ def scan_qr(timestamp):
         creation_qr = tz.localize(datetime.strptime(timestamp, '%Y%m%d%H%M%S'))
         creation_time_str = creation_qr.strftime('%Y-%m-%d %H:%M:%S')
         message = """🔍 Thông tin mã QR như sau:<br>"""
+    elif "BN61" in model:
+        tz = pytz.timezone('Asia/Ho_Chi_Minh')
+        creation_qr = tz.localize(datetime.strptime(timestamp, '%Y%m%d%H%M%S'))
+        creation_time_str = creation_qr.strftime('%Y-%m-%d %H:%M:%S')
+        message = """🔍 Thông tin mã QR như sau:<br>"""
     else:
         try:
             tz = pytz.timezone('Asia/Ho_Chi_Minh')
