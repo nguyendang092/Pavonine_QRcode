@@ -97,20 +97,6 @@ header {
     overflow: hidden;
     position: relative;
 }
-@media print {
-  body, .container, .qr-code {
-    margin: 0 !important;
-    padding: 0 !important;
-    page-break-inside: avoid !important;
-    box-sizing: border-box;
-  }
-  .container {
-    display: block !important;
-  }
-  .qr-code {
-    display: block !important;
-  }
-}
 
 .slides {
     display: flex;
@@ -189,5 +175,21 @@ header {
     transform: scaleX(1);
     transform-origin: bottom left;
   }
+  @media print {
+  body, html {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    height: auto !important;
+    min-height: auto !important;
+  }
+  .qr-code {
+    page-break-inside: avoid !important;
+  }
+  main {
+    page-break-after: avoid !important;
+    page-break-before: avoid !important;
+  }
+}
 
 
